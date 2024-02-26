@@ -11,7 +11,7 @@ app.use(express.raw({ type: "application/vnd.custom-type" }));
 app.use(express.text({ type: "text/html" }));
 
 app.get("/users", async (req, res) => {
-  const users = await prisma.todo.findMany({
+  const users = await prisma.user.findMany({
     orderBy: { createdAt: "desc" },
   });
 
