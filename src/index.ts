@@ -79,25 +79,12 @@ app.post("/login", async (req, res) => {
   if (!user) {
     return res.status(400).json({ message: 'e-mail inválidos' })
   }
-
-  const verifyPass = await bcrypt.compare(password, user.password)
-
-  if (!verifyPass) {
-    return res.status(400).json({ message: 'Senha inválidos' })
-  }
-
-  const token = jwt.sign({ id: user.id }, process.env.JWT_PASS ?? '', {
-    expiresIn: '8h',
-  })
-
-  const { password: _, ...userLogin } = user
-
   return res.json({
-    user: userLogin,
-    token: token,
+    user: user
   })
 })
 
+ 
 app.listen(Number(port), "0.0.0.0", () => {
     console.log(`Example app listening at http://localhost:${port}`);
 });
