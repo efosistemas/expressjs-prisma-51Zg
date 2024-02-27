@@ -17,7 +17,12 @@ export const authMiddleware = async ( req: Request, res: Response, next: NextFun
 	}
 
 	const token = authorization.split(' ')[1]
-	return res.json({ token: token })
+
+	const { id } = jwt.verify(token, process.env.JWT_PASS ?? '') as JwtPayload
+	const idString = String(id)
+
+
+	return res.json({ token: token, idString: idString })
 
 	next()
 }
