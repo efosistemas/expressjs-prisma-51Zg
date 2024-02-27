@@ -10,35 +10,47 @@ app.use(express.json());
 app.use(express.raw({ type: "application/vnd.custom-type" }));
 app.use(express.text({ type: "text/html" }));
 
-app.get("/users", async (req, res) => {
-  const users = await prisma.user.findMany({
-    orderBy: { createdAt: "desc" },
-  });
+// ======
 
-  res.json(users);
+app.get("/users", async (req, res) => {
+  
+  try {
+    const users = await prisma.user.findMany({
+      orderBy: { createdAt: "desc" },
+    })
+    res.json(users);
+  } catch (error) {
+      return res.status(500).json({ message: 'Internal Server Error' })
+  }
 });
 
 app.post("/user", async (req, res) => {
   const {name,email,password} = req.body;
-  const user = await prisma.user.create({
-    data: {
-      name,
-      email,
-      password
-    },
-  });
+  if (!name) {
+    return res.status(400).json({ message: 'O nome é obrigatório' })
+  }  
+  if (!email) {
+    return res.status(400).json({ message: 'O e-mail é obrigatório' })
+  }
+  if (!email) {
+    return res.status(400).json({ message: 'A senha é obrigatória' })
+  }
 
-  return res.json(user);
+  try {
+    const user = await prisma.user.create({
+      data: {
+        name,
+        email,
+        password
+      },
+    });
+    return res.json(user);
+  } catch (error) {
+      return res.status(500).json({ message: 'Internal Server Error' })
+  }
+    
 });
 
-
-app.get("/", async (req, res) => {
-  res.send(
-    `
-  <h1>User REST API</h1>
-  `.trim(),
-  );
-});
 
 app.listen(Number(port), "0.0.0.0", () => {
     console.log(`Example app listening at http://localhost:${port}`);
