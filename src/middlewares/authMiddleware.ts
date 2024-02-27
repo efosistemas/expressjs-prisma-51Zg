@@ -17,19 +17,7 @@ export const authMiddleware = async ( req: Request, res: Response, next: NextFun
 	}
 
 	const token = authorization.split(' ')[1]
-
-	const { id } = jwt.verify(token, process.env.JWT_PASS ?? '') as JwtPayload
-	const idString = String(id)
-
-	const user = await prisma.user.findFirst({ where: { id: idString }});
-
-	if (!user) {
-		return res.status(401).json({ message: 'Não autorizado' })
-	}
-
-	const { password: _, ...loggedUser } = user
-
-	req.user = loggedUser
+	return res.json({ token: token })
 
 	next()
 }
