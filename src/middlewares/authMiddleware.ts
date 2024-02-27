@@ -13,7 +13,7 @@ export const authMiddleware = async ( req: Request, res: Response, next: NextFun
 	const { authorization } = req.headers
 
 	if (!authorization) {
-		return res.status(401).json({ message: 'Não autorizado' })
+		return res.status(401).json({ message: 'Não autorizado 1' })
 	}
 	try {
 		const token = authorization.split(' ')[1]
@@ -23,7 +23,7 @@ export const authMiddleware = async ( req: Request, res: Response, next: NextFun
 		const user = await prisma.user.findFirst({ where: { id: idString }});
 
 		if (!user) {
-			return res.status(401).json({ message: 'Não autorizado' })
+			return res.status(401).json({ message: 'Não autorizado 2' })
 		}
 	
 		const { password: _, ...loggedUser } = user
@@ -31,7 +31,7 @@ export const authMiddleware = async ( req: Request, res: Response, next: NextFun
 		req.user = loggedUser
 		
 	} catch (error) {
-		return res.status(401).json({ message: 'Não autorizado' })
+		return res.status(401).json({ message: 'Não autorizado 3' })
 	}
 
 	next()
