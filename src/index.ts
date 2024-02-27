@@ -90,10 +90,11 @@ app.post("/login", async (req, res) => {
     expiresIn: '8h',
   })
 
+  const { password: _, ...userLogin } = user
 
   return res.json({
+    user: userLogin,
     token: token,
-    user: user
   })
 })
 
