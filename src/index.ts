@@ -48,7 +48,7 @@ app.post("/user", async (req, res) => {
     return res.status(400).json({ message: 'A senha é obrigatória' })
   }
   const userExists = await prisma.user.findFirst({where: {email: email}});
-  if (!userExists) {
+  if (userExists) {
     return res.status(400).json({ message: 'e-mail já cadastrado' })
   }
 
