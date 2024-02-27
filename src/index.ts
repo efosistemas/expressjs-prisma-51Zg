@@ -86,7 +86,7 @@ app.post("/login", async (req, res) => {
     return res.status(400).json({ message: 'Senha inválidos' })
   }
 
-  const token = jwt.sign({ id: user?.id }, process.env.JWT_PASS ?? '', {
+  const token = jwt.sign({ id: user.id }, process.env.JWT_PASS ?? '', {
     expiresIn: '8h',
   })
 
