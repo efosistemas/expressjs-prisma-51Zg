@@ -18,11 +18,20 @@ app.get("/users", async (req, res) => {
   
   try {
     const users = await prisma.user.findMany({
-      orderBy: { createdAt: "desc" },
-    })
-    const { password: _, ...usersList } = users
-    res.json(usersList);
-  } catch (error) {
+        select: {
+          password: false,
+          name: true,
+          email: true,
+          createdAt: true
+        },
+        orderBy: [
+          {
+            createdAt: 'desc',
+          },
+        ]
+        });
+        res.json(users);
+    } catch (error) {
       return res.status(500).json({ message: 'Internal Server Error' })
   }
 });
