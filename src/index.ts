@@ -79,7 +79,15 @@ app.post("/login", async (req, res) => {
   if (!user) {
     return res.status(400).json({ message: 'e-mail inválidos' })
   }
+  
+  const verifyPass = await bcrypt.compare(password, user.password)
+
+  if (!verifyPass) {
+    return res.status(400).json({ message: 'Senha inválidos' })
+  }
+
   return res.json({
+    verifica: verifyPass,
     user: user
   })
 })
