@@ -1,5 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import express from "express";
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 
 const prisma = new PrismaClient();
 
@@ -18,7 +20,8 @@ app.get("/users", async (req, res) => {
     const users = await prisma.user.findMany({
       orderBy: { createdAt: "desc" },
     })
-    res.json(users);
+    const { password: _, ...usersList } = users
+    res.json(usersList);
   } catch (error) {
       return res.status(500).json({ message: 'Internal Server Error' })
   }
@@ -35,15 +38,23 @@ app.post("/user", async (req, res) => {
   if (!email) {
     return res.status(400).json({ message: 'A senha é obrigatória' })
   }
+  const userExists = await prisma.user.findFirst({where: {email: email}});
+  if (!userExists) {
+    return res.status(400).json({ message: 'e-mail já cadastrado' })
+  }
 
+  const hashPassword = await bcrypt.hash(password, 10)
+  
   try {
-    const user = await prisma.user.create({
+    const newUser = await prisma.user.create({
       data: {
         name,
         email,
-        password
+        password: hashPassword 
       },
-    });
+    }); 
+    const { password: _, ...user } = newUser
+
     return res.json(user);
   } catch (error) {
       return res.status(500).json({ message: 'Internal Server Error' })
