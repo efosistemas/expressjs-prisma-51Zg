@@ -77,13 +77,13 @@ app.post("/login", async (req, res) => {
   const user = await prisma.user.findFirst({ where: { email: email }});
 
   if (!user) {
-    return res.status(400).json({ message: 'e-mail/Senha inválidos' })
+    return res.status(400).json({ message: 'e-mail inválidos' })
   }
 
   const verifyPass = await bcrypt.compare(password, user.password)
 
   if (!verifyPass) {
-    return res.status(400).json({ message: 'e-mail/Senha inválidos' })
+    return res.status(400).json({ message: 'Senha inválidos' })
   }
 
   const token = jwt.sign({ id: user?.id }, process.env.JWT_PASS ?? '', {
