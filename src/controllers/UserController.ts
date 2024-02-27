@@ -93,5 +93,10 @@ export class UserController {
 		  token: token,
 		})
 	}
+
+	async getProfile(req: Request, res: Response) {
+		return res.json(req.user)
+	}
+
 }
   
